@@ -23,9 +23,7 @@ const NAV = [
 // setting logo: "images/yourlogo.png". Without a logo, the name is shown.
 const SPONSORS = [
   { name: "Formlabs",   url: "#", logo: "images/formlabs.png" },
-  { name: "ABB Automation",   url: "#", logo: "images/ABB.png" },
   { name: "ETBO Tool & Die", url: "#", logo: "images/etbo.png" },
-  { name: "RepRap",  url: "#", logo: "images/reprap.png" },
   { name: "JLC PCB",  url: "#", logo: "images/jlcpcb.png" },
   { name: "Duet",   url: "#", logo: "images/duet.png" }
 ];
