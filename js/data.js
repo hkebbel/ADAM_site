@@ -33,18 +33,12 @@ const SPONSOR_SPEED = 60; // pixels per second; lower is slower
 
 // Project page: clickable parts list
 const PARTS = [
-  { name: "X-axis", color: "--x", text: "Moves the fixture side to side along rails driven by a stepper motor.", detail: "Replace with travel distance and drive type." },
-  { name: "Y-axis", color: "--y", text: "Moves the gantry front to back, carrying the toolhead across the work area.", detail: "Replace with travel distance and drive type." },
-  { name: "Z-axis", color: "--z", text: "Raises and lowers the toolhead to set cutting depth.", detail: "Replace with travel distance and drive type." },
-  { name: "Toolhead", color: "--tool", text: "Holds the cutting tool and does the actual shaping.", detail: "Replace with tool type and spindle details." },
-  { name: "Workpiece", color: "--work", text: "The material being shaped into the final part.", detail: "Replace with materials you can cut." },
-  { name: "Material fixture", color: "--fix", text: "Clamps the workpiece so it stays put while the tool cuts.", detail: "Replace with clamping method." },
-  { name: "Base", color: "--base", text: "The rigid foundation that keeps every axis aligned and steady.", detail: "Replace with frame material and weight." }
+  { name: "", color: "--x", text: "", detail: "" }
 ];
 
 // Design Log page: newest last
 const LOG = [
-  { date: "Week 1", title: "User Case", text: "Form Labs use case maybe" }
+  { date: "Week 1", title: "User Cases", text: "" }
 ];
 
 // About Us page. Add photo: "images/name.jpg" to show a picture instead of the initial.
