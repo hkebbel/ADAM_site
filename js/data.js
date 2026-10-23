@@ -24,6 +24,8 @@ const NAV = [
 const SPONSORS = [
   { name: "Formlabs",   url: "#", logo: "images/formlabs.png" },
   { name: "ETBO Tool & Die", url: "#", logo: "images/etbo.png" },
+  { name: "Igus", url: "#", logo: "images/igus.png" },
+  { name: "Oelheld", url: "#", logo: "images/oelheld.png" },
   { name: "JLC PCB",  url: "#", logo: "images/jlcpcb.png" },
   { name: "Duet",   url: "#", logo: "images/duet.png" }
 ];
