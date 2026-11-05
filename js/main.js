@@ -2,6 +2,35 @@
 (function () {
   const $ = (s) => document.querySelector(s);
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    // Turns blocks into HTML. A { heading } block starts a collapsible section.
+  const renderBlock = (b, alt) =>
+    b.pdf ? `<div class="pdf"><button type="button" class="pdf-btn" data-src="${esc(b.pdf)}" data-title="${esc(b.title || "PDF")}">View ${esc(b.title || "PDF")}</button><a class="pdf-open" href="${esc(b.pdf)}" target="_blank" rel="noopener">Open in new tab</a></div>` :
+    b.list ? `<ul>${b.list.map((li) => `<li>${esc(li)}</li>`).join("")}</ul>` :
+    b.image ? `<figure><img loading="lazy" src="${esc(b.image)}" alt="${esc(b.alt || b.caption || alt)}">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` :
+    `<p>${esc(b.text || "")}</p>`;
+  const renderBlocks = (blocks = [], alt = "") => {
+    let html = "", open = false, first = true;
+    blocks.forEach((b) => {
+      if (b.heading) {
+        if (open) html += "</div></details>";
+        const isOpen = b.open !== undefined ? b.open : first;
+        html += `<details class="acc"${isOpen ? " open" : ""}><summary>${esc(b.heading)}</summary><div class="acc-body">`;
+        open = true; first = false;
+      } else html += renderBlock(b, alt);
+    });
+    return html + (open ? "</div></details>" : "");
+  };
+    // PDFs load only when their button is clicked
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".pdf-btn");
+    if (!btn) return;
+    const f = document.createElement("iframe");
+    f.src = btn.dataset.src;
+    f.title = btn.dataset.title;
+    f.className = "pdf-frame";
+    btn.parentNode.insertBefore(f, btn);
+    btn.remove();
+  });
   const here = location.pathname.split("/").pop() || "index.html";
 
   // Header
@@ -48,23 +77,38 @@
     const pick = (i) => {
       const p = PARTS[i];
       pd.style.setProperty("--c", `var(${p.color})`);
-      pd.innerHTML = `<h3>${esc(p.name)}</h3><p>${esc(p.text)}</p><small>${esc(p.detail)}</small>`;
+      pd.innerHTML = `<h3>${esc(p.name)}</h3>` +
+        (p.text ? `<p>${esc(p.text)}</p>` : "") +
+        (p.photos ? `<div class="pgallery">${p.photos.map((src) => `<img src="${esc(src)}" alt="${esc(p.name)}">`).join("")}</div>` : "") +
+        renderBlocks(p.blocks, p.name) +
+        (p.detail ? `<small>${esc(p.detail)}</small>` : "");
       [...pl.children].forEach((b, j) => b.setAttribute("aria-selected", j === i));
     };
     PARTS.forEach((p, i) => {
       const b = document.createElement("button");
       b.setAttribute("role", "tab");
-      b.textContent = p.name;
+      if (p.image) {
+        b.classList.add("has-img");
+        b.innerHTML = `<img src="${esc(p.image)}" alt=""><span>${esc(p.name)}</span>`;
+      } else {
+        b.textContent = p.name;
+      }
       b.style.setProperty("--c", `var(${p.color})`);
       b.onclick = () => pick(i);
       pl.appendChild(b);
     });
-    pick(3);
+    pick(0);
   }
 
   // Design log
   const log = $("#log-list");
-  if (log) log.innerHTML = LOG.map((e) => `<li><time>${esc(e.date)}</time><h3>${esc(e.title)}</h3><p>${esc(e.text)}</p></li>`).join("");
+  if (log) log.innerHTML = LOG.map((e) =>
+    `<li><details class="acc log-acc"${e.open ? " open" : ""}><summary><span>${esc(e.title)}</span></summary><div class="acc-body">` +
+    (e.text ? `<p>${esc(e.text)}</p>` : "") + renderBlocks(e.blocks, e.title) + `</div></details></li>`).join("");
+
+  // // Design log
+  // const log = $("#log-list");
+  // if (log) log.innerHTML = LOG.map((e) => `<li><time>${esc(e.date)}</time><h3>${esc(e.title)}</h3><p>${esc(e.text)}</p></li>`).join("");
 
   // About
   const team = $("#team-grid");
